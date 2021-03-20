@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Video Chat</title>
+  <link rel="stylesheet" href="/index.css" />
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/index.js" type="module"></script>
+</head>
+
+<body>
+  <div id="video-grid">
+    <video playsinline autoplay muted id="local-video"></video>
+    <video playsinline autoplay id="remote-video"></video>
+  </div>
+
+  <div>
+    <span style="font-weight: bold">Message: </span>
+    <input type="text" id="message-input" />
+    <button id="message-button">Send</button>
+  </div>
+
+  <div class="messages"></div>
+</body>
+
+</html>
