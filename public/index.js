@@ -46,7 +46,9 @@
       stream.getTracks().forEach(track => localConnection.addTrack(track, stream));
 
       localConnection.onicecandidate = ({ candidate }) => {
-        candidate && socket.emit("candidate", socketId, candidate);
+        if (candidate) {
+          socket.emit("candidate", socketId, candidate);
+        }
       };
 
       localConnection.ontrack = ({ streams: [stream] }) => {
@@ -63,17 +65,21 @@
         .createOffer()
         .then(offer => localConnection.setLocalDescription(offer))
         .then(() => {
+          console.log("sending offer", socketId, localConnection.localDescription);
           socket.emit("offer", socketId, localConnection.localDescription);
         });
     });
 
     socket.on("offer", (socketId, description) => {
+      console.log("received offer", socketId, description);
       remoteConnection = new RTCPeerConnection();
 
       stream.getTracks().forEach(track => remoteConnection.addTrack(track, stream));
 
       remoteConnection.onicecandidate = ({ candidate }) => {
-        candidate && socket.emit("candidate", socketId, candidate);
+        if (candidate) {
+          socket.emit("candidate", socketId, candidate);
+        }
       };
 
       remoteConnection.ontrack = ({ streams: [stream] }) => {
@@ -93,15 +99,18 @@
         .then(() => remoteConnection.createAnswer())
         .then(answer => remoteConnection.setLocalDescription(answer))
         .then(() => {
+          console.log("sending answer", socketId, remoteConnection.localDescription);
           socket.emit("answer", socketId, remoteConnection.localDescription);
         });
     });
 
     socket.on("answer", (description) => {
+      console.log("received answer", description);
       localConnection.setRemoteDescription(description);
     });
 
     socket.on("candidate", (candidate) => {
+      console.log("received candidate", candidate);
       const conn = localConnection || remoteConnection;
       conn.addIceCandidate(new RTCIceCandidate(candidate));
     });

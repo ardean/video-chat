@@ -21,17 +21,17 @@ import * as config from "./config";
     socket.emit("other-users", otherUsers);
 
     socket.on("offer", (socketId, description) => {
-      console.log(`offer from ${socketId} with description ${description}`);
+      console.log(`offer from ${socketId} with description ${JSON.stringify(description, null, 2)}`);
       socket.to(socketId).emit("offer", socket.id, description);
     });
 
     socket.on("answer", (socketId, description) => {
-      console.log(`answer from ${socketId} with description ${description}`);
+      console.log(`answer from ${socketId} with description ${JSON.stringify(description, null, 2)}`);
       socket.to(socketId).emit("answer", description);
     });
 
     socket.on("candidate", (socketId, candidate) => {
-      console.log(`candidate from ${socketId} with candidate ${candidate}`);
+      console.log(`candidate from ${socketId} with candidate ${JSON.stringify(candidate, null, 2)}`);
       socket.to(socketId).emit("candidate", candidate);
     });
 
