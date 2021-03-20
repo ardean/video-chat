@@ -63,7 +63,7 @@
 
       localConnection
         .createOffer()
-        .then(offer => localConnection.setLocalDescription(offer))
+        .then(offer => localConnection.setRemoteDescription(offer))
         .then(() => {
           console.log("sending offer", socketId, localConnection.localDescription);
           socket.emit("offer", socketId, localConnection.localDescription);
@@ -97,7 +97,7 @@
       remoteConnection
         .setRemoteDescription(description)
         .then(() => remoteConnection.createAnswer())
-        .then(answer => remoteConnection.setLocalDescription(answer))
+        .then(answer => remoteConnection.setRemoteDescription(answer))
         .then(() => {
           console.log("sending answer", socketId, remoteConnection.localDescription);
           socket.emit("answer", socketId, remoteConnection.localDescription);
