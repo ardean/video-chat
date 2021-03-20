@@ -47,6 +47,7 @@
 
       localConnection.onicecandidate = ({ candidate }) => {
         if (candidate) {
+          console.log("sending candidate", candidate);
           socket.emit("candidate", socketId, candidate);
         }
       };
@@ -78,6 +79,7 @@
 
       remoteConnection.onicecandidate = ({ candidate }) => {
         if (candidate) {
+          console.log("sending candidate", candidate);
           socket.emit("candidate", socketId, candidate);
         }
       };
