@@ -65,8 +65,8 @@
         .createOffer()
         .then(offer => localConnection.setRemoteDescription(offer))
         .then(() => {
-          console.log("sending offer", socketId, localConnection.localDescription);
-          socket.emit("offer", socketId, localConnection.localDescription);
+          console.log("sending offer", socketId, localConnection.remoteDescription);
+          socket.emit("offer", socketId, localConnection.remoteDescription);
         });
     });
 
@@ -99,8 +99,8 @@
         .then(() => remoteConnection.createAnswer())
         .then(answer => remoteConnection.setRemoteDescription(answer))
         .then(() => {
-          console.log("sending answer", socketId, remoteConnection.localDescription);
-          socket.emit("answer", socketId, remoteConnection.localDescription);
+          console.log("sending answer", socketId, remoteConnection.remoteDescription);
+          socket.emit("answer", socketId, remoteConnection.remoteDescription);
         });
     });
 
