@@ -111,8 +111,8 @@
 
     socket.on("candidate", (candidate) => {
       console.log("received candidate", candidate);
-      const conn = localConnection || remoteConnection;
-      conn.addIceCandidate(new RTCIceCandidate(candidate));
+      const connection = localConnection || remoteConnection;
+      connection.addIceCandidate(new RTCIceCandidate(candidate));
     });
 
     sendButton.addEventListener("click", () => {
