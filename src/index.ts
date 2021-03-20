@@ -14,24 +14,29 @@ import * as config from "./config";
   let connectedUsers = [];
 
   io.on("connection", (socket) => {
+    console.log(`${socket.id} connected`);
     connectedUsers.push(socket.id);
 
     const otherUsers = connectedUsers.filter(socketId => socketId !== socket.id);
     socket.emit("other-users", otherUsers);
 
     socket.on("offer", (socketId, description) => {
+      console.log(`offer from ${socketId} with description ${description}`);
       socket.to(socketId).emit("offer", socket.id, description);
     });
 
     socket.on("answer", (socketId, description) => {
+      console.log(`answer from ${socketId} with description ${description}`);
       socket.to(socketId).emit("answer", description);
     });
 
     socket.on("candidate", (socketId, candidate) => {
+      console.log(`candidate from ${socketId} with candidate ${candidate}`);
       socket.to(socketId).emit("candidate", candidate);
     });
 
     socket.on("disconnect", () => {
+      console.log(`${socket.id} disconnected`);
       connectedUsers = connectedUsers.filter(socketId => socketId !== socket.id);
     });
   });
