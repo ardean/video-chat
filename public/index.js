@@ -10,7 +10,7 @@
     const newMessage = document.createElement("div");
     newMessage.innerText = message;
     messagesEl.appendChild(newMessage);
-    console.log(message);
+    console.info(message);
   };
 
   (async () => {
@@ -25,7 +25,7 @@
 
       initConnection(stream);
     } catch (err) {
-      console.log(error)
+      console.error(err);
     }
   })();
 
@@ -47,7 +47,7 @@
 
       localConnection.onicecandidate = ({ candidate }) => {
         if (candidate) {
-          console.log("sending candidate", candidate);
+          logMessage(`sending candidate ${JSON.stringify(candidate, null, 2)}`);
           socket.emit("candidate", socketId, candidate);
         }
       };
@@ -66,20 +66,20 @@
         .createOffer()
         .then(offer => localConnection.setLocalDescription(offer))
         .then(() => {
-          console.log("sending offer", socketId, localConnection.localDescription);
+          logMessage(`sending offer to ${socketId} ${JSON.stringify(localConnection.localDescription, null, 2)}`);
           socket.emit("offer", socketId, localConnection.localDescription);
         });
     });
 
     socket.on("offer", (socketId, description) => {
-      console.log("received offer", socketId, description);
+      logMessage("received offer", socketId, description);
       remoteConnection = new RTCPeerConnection();
 
       stream.getTracks().forEach(track => remoteConnection.addTrack(track, stream));
 
       remoteConnection.onicecandidate = ({ candidate }) => {
         if (candidate) {
-          console.log("sending candidate", candidate);
+          logMessage(`sending candidate to ${socketId} ${JSON.stringify(candidate, null, 2)}`);
           socket.emit("candidate", socketId, candidate);
         }
       };
@@ -94,25 +94,25 @@
         remoteChannel.onmessage = (event) => logMessage(`Receive: ${event.data}`);
         remoteChannel.onopen = (event) => logMessage(`Channel Changed: ${event.type}`);
         remoteChannel.onclose = (event) => logMessage(`Channel Changed: ${event.type}`);
-      }
+      };
 
       remoteConnection
         .setRemoteDescription(description)
         .then(() => remoteConnection.createAnswer())
         .then(answer => remoteConnection.setLocalDescription(answer))
         .then(() => {
-          console.log("sending answer", socketId, remoteConnection.localDescription);
+          logMessage(`sending answer to ${socketId} ${JSON.stringify(remoteConnection.localDescription, null, 2)}`);
           socket.emit("answer", socketId, remoteConnection.localDescription);
         });
     });
 
     socket.on("answer", (description) => {
-      console.log("received answer", description);
+      logMessage(`received answer ${JSON.stringify(description, null, 2)}`);
       localConnection.setRemoteDescription(description);
     });
 
     socket.on("candidate", (candidate) => {
-      console.log("received candidate", candidate);
+      logMessage(`received candidate ${JSON.stringify(candidate, null, 2)}`);
       const connection = localConnection || remoteConnection;
       connection.addIceCandidate(new RTCIceCandidate(candidate));
     });
